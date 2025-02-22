@@ -1,0 +1,13 @@
+{
+    "name": "React Native Development Container",
+    "dockerFile": "Dockerfile",
+    "appPort": [8081],
+    "extensions": [
+        "msjsdiag.vscode-react-native",
+        "dbaeumer.vscode-eslint"
+    ],
+    "settings": {
+        "terminal.integrated.shell.linux": "/bin/bash"
+    },
+    "postCreateCommand": "npm install"
+}

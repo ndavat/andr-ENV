@@ -5,7 +5,7 @@
         "context": "."
     },
     "forwardPorts": [8081],
-    "postCreateCommand": "",
+    "postCreateCommand": "RUN npm install",
     "customizations": {
         "vscode": {
             "extensions": [

@@ -1,13 +1,26 @@
 {
-    "name": "React Native Development Container",
-    "dockerFile": "Dockerfile",
-    "appPort": [8081],
-    "extensions": [
-        "msjsdiag.vscode-react-native",
-        "dbaeumer.vscode-eslint"
-    ],
-    "settings": {
-        "terminal.integrated.shell.linux": "/bin/bash"
+    "name": "React Native Android Development",
+    "build": {
+        "dockerfile": "Dockerfile",
+        "context": "."
     },
-    "postCreateCommand": "npm install"
+    "forwardPorts": [8081],
+    "postCreateCommand": "npm install",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "dbaeumer.vscode-eslint",
+                "esbenp.prettier-vscode",
+                "msjsdiag.vscode-react-native"
+            ]
+        }
+    },
+    "remoteUser": "root",
+    "features": {
+        "ghcr.io/devcontainers/features/common-utils:2": {
+            "installZsh": true,
+            "configureZshAsDefaultShell": true,
+            "installOhMyZsh": true
+        }
+    }
 }

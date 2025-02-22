@@ -1,29 +1,41 @@
-# Use the official image as a parent image
+# Base image with Node.js
 FROM ubuntu:22.04
 
-# Set environment variables to avoid interactive prompts during package installation
+# Prevent interactive prompts during package installation
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install dependencies
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
-    openjdk-11-jdk \
-    nodejs \
-    npm \
     curl \
     git \
     unzip \
+    xz-utils \
+    zip \
+    libglu1-mesa \
+    openjdk-11-jdk \
+    wget \
     && rm -rf /var/lib/apt/lists/*
 
+# Install Node.js
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+    && apt-get install -y nodejs \
+    && npm install -g yarn
+
 # Install Android SDK
-RUN mkdir -p /usr/local/android-sdk-linux && cd /usr/local/android-sdk-linux && \
-    curl -o sdk-tools.zip https://dl.google.com/android/repository/commandlinetools-linux-6609375_latest.zip && \
-    unzip sdk-tools.zip && rm sdk-tools.zip
+ENV ANDROID_HOME=/opt/android-sdk
+ENV PATH=${PATH}:${ANDROID_HOME}/cmdline-tools/latest/bin:${ANDROID_HOME}/platform-tools
 
-ENV ANDROID_SDK_ROOT /usr/local/android-sdk-linux
-ENV PATH ${PATH}:${ANDROID_SDK_ROOT}/tools:${ANDROID_SDK_ROOT}/tools/bin:${ANDROID_SDK_ROOT}/platform-tools
+RUN mkdir -p ${ANDROID_HOME} \
+    && cd ${ANDROID_HOME} \
+    && wget https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip \
+    && unzip commandlinetools-linux-*_latest.zip \
+    && rm commandlinetools-linux-*_latest.zip \
+    && mkdir -p cmdline-tools/latest \
+    && mv cmdline-tools/* cmdline-tools/latest/ 2>/dev/null || true
 
-RUN yes | sdkmanager --licenses && \
-    sdkmanager "platform-tools" "platforms;android-29" "build-tools;29.0.3"
+# Accept licenses and install Android SDK packages
+RUN yes | sdkmanager --licenses \
+    && sdkmanager "platform-tools" "platforms;android-33" "build-tools;33.0.0"
 
 # Install React Native CLI
 RUN npm install -g react-native-cli

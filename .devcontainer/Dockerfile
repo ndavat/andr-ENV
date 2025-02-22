@@ -1,5 +1,8 @@
 # Use the official image as a parent image
-FROM ubuntu:20.04
+FROM ubuntu:22.04
+
+# Set environment variables to avoid interactive prompts during package installation
+ENV DEBIAN_FRONTEND=noninteractive
 
 # Install dependencies
 RUN apt-get update && apt-get install -y \
